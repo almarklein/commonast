@@ -50,6 +50,6 @@ for line in code.splitlines():
                 if line.startswith('Attributes:'):
                     continue
                 lines.append(line)
-            docs += '\n'.join(lines) + '\n\n'
+            docs += '\n    '.join(lines) + '\n\n'
 
 open('nodes.md', 'wb').write(docs.encode())
