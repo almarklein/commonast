@@ -36,7 +36,7 @@ for line in code.splitlines():
             docs += '## %s\n\n' % title
         elif line.startswith('class '):
             clsname = line[6:].split('(')[0]
-            docs += 'class **%s**\n\n'% clsname
+            docs += '#### class %s\n\n'% clsname
             cls = getattr(commonast, clsname)
             doc = '    ' + cls.__doc__.strip()
             lines = []
@@ -49,7 +49,7 @@ for line in code.splitlines():
                     line = '  ' + line.strip()
                 if line.startswith('Attributes:'):
                     continue
-                lines.append('    ' + line)
+                lines.append(line)
             docs += '\n'.join(lines) + '\n\n'
 
 open('nodes.md', 'wb').write(docs.encode())
