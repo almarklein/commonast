@@ -324,19 +324,19 @@ class UnaryOp(Node):
     
     Attributes:
         op: the operator (an enum from ``Node.OPS``).
-        value_nodes: a list with one node (i.e. the operand).
+        right_node: the operand at the right of the operator.
     """
-    __slots__ = 'op', 'value_nodes'
+    __slots__ = 'op', 'right_node'
 
 class BinOp(Node):
     """ A binary operation (e.g. ``a / b``, ``a + b``).
     
     Attributes:
         op: the operator (an enum from ``Node.OPS``).
-        value_nodes: a list with two nodes (the one to the left and the
-            one to the right of the operator).
+        left_node: the node to the left of the operator.
+        right_node: the node to the right of the operator.
     """
-    __slots__ = 'op', 'value_nodes'
+    __slots__ = 'op', 'left_node', 'right_node'
 
 class BoolOp(Node):
     """ A boolean operator (``and``, ``or``, but not ``not``).
@@ -353,10 +353,10 @@ class Compare(Node):
     
     Attributes:
         op: the comparison operator (an enum from ``Node.COMP``).
-        value_nodes: a list with two nodes (the one to the left and the
-            one to the right of the operator).
+        left_node: the node to the left of the operator.
+        right_node: the node to the right of the operator.
     """
-    __slots__ = 'op', 'value_nodes'
+    __slots__ = 'op', 'left_node', 'right_node'
 
 class Call(Node):
     """ A function call.
@@ -811,15 +811,15 @@ class NativeAstConverter:
     
     def _convert_UnaryOp(self, n):
         op = n.op.__class__.__name__
-        return UnaryOp(op, self._listconvert([n.operand]))
+        return UnaryOp(op, self._convert(n.operand))
     
     def _convert_BinOp(self, n):
         op = n.op.__class__.__name__
-        return BinOp(op, self._listconvert([n.left, n.right]))
+        return BinOp(op, self._convert(n.left), self._convert(n.right))
     
     def _convert_BoolOp(self, n):
         op = n.op.__class__.__name__
-        return BoolOp(op, self._listconvert(n.values))
+        return BoolOp(op, self._listconvert(n.values))  # list of value_nodes
     
     def _convert_Compare(self, n):
         # Get compares and ops
@@ -829,7 +829,7 @@ class NativeAstConverter:
         # Create our comparison operators
         compares = []
         for i in range(len(ops)):
-            co = Compare(ops[i], [comps[i], comps[i+1]])
+            co = Compare(ops[i], comps[i], comps[i+1])
             compares.append(co)
         # Return single or wrapped in an AND
         assert compares
