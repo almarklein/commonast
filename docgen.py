@@ -17,10 +17,15 @@ for line in code.splitlines():
             docs += '## %s\n\n' % title
         elif line.startswith('class '):
             clsname = line[6:].split('(')[0]
-            docs += '### %s\n\n'% clsname
+            docs += '*%s*\n\n'% clsname
             cls = getattr(commonast, clsname)
             #cls.__doc__ = '%s(%s)\n%s' % (clsname, ', '.join(cls.__slots__), cls.__doc__) 
             #cls.__doc__ = '%s()\n%s' % (clsname, cls.__doc__)
-            docs += cls.__doc__.rstrip() + '\n\n'
+            doc = '    ' + cls.__doc__.strip()
+            lines = [line[4:] for line in doc.splitlines()]
+            doc = '\n'.join(lines)
+            docs = docs.replace('\n    ', '\n* ')
+            docs = docs.replace('Attributes:\n', '')
+            docs += doc + '\n\n'
 
 open('nodes.md', 'wb').write(docs.encode())
