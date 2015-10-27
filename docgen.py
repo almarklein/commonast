@@ -4,9 +4,11 @@ Small script to create the node specification in markdown.
 
 import commonast
 
-docs = '# Node specifications\n\n'
+docs = '*(this document is auto-generated, do not edit)*\n\n'
 
 docs += """
+# Node specifications\n\n
+
 Each node has a number of attributes as specified below. Each node also
 has a `tojson()` method, and a tree can be reconstructed using
 `Node.fromjson()`. Using `print(node)` will print its json.

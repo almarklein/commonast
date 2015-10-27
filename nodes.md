@@ -1,4 +1,8 @@
+*(this document is auto-generated, do not edit)*
+
+
 # Node specifications
+
 
 
 Each node has a number of attributes as specified below. Each node also
