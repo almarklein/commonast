@@ -1,6 +1,22 @@
+"""
+Small script to create the node specification in markdown.
+"""
+
 import commonast
 
 docs = '# Node specifications\n\n'
+
+docs += """
+Each node has a number of attributes as specified below. Each node also
+has a `tojson()` method, and a tree can be reconstructed using
+`Node.fromjson()`. Using `print(node)` will print its json.
+\n
+"""
+
+docs += '## Enums\n\n'
+
+docs += '`Node.OPS` - %s\n\n' % commonast.Node.OPS.__doc__
+docs += '`Node.COMP` - %s\n\n' % commonast.Node.COMP.__doc__
 
 code = open(commonast.__file__, 'rb').read().decode()
 
@@ -19,8 +35,6 @@ for line in code.splitlines():
             clsname = line[6:].split('(')[0]
             docs += '**%s**\n\n'% clsname
             cls = getattr(commonast, clsname)
-            #cls.__doc__ = '%s(%s)\n%s' % (clsname, ', '.join(cls.__slots__), cls.__doc__) 
-            #cls.__doc__ = '%s()\n%s' % (clsname, cls.__doc__)
             doc = '    ' + cls.__doc__.strip()
             lines = []
             for line in [line[4:] for line in doc.splitlines()]:
@@ -28,8 +42,8 @@ for line in code.splitlines():
                 if indent == 4:  # new attribute
                     word, _, des = line.strip().partition(':')
                     line = '* ``%s``: %s' % (word, des)
-                elif indent > 4:
-                    line = '  ' + line.strip()  # continuation
+                elif indent > 4:  # continuation
+                    line = '  ' + line.strip()
                 if line.startswith('Attributes:'):
                     continue
                 lines.append(line)

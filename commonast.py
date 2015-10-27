@@ -1,7 +1,10 @@
 """
-Module that defines a common AST description, and has a parser to
+Module that defines a common AST description, independent from Python
+version and implementation. Also provides a function ``parse()`` to
 generate this common AST by using the buildin ast module and converting
 the result.
+
+https://github.com/almarklein/commonast
 """
 
 import sys
@@ -13,7 +16,7 @@ pyversion = sys.version_info
 
 
 def parse(code):
-    """ Parse the given string of Python code and return an AST tree.
+    """ Parse the given string of Python code and return a common AST tree.
     """
     root = ast.parse(code)
     converter = NativeAstConverter()
@@ -157,6 +160,8 @@ Node.OPS.__doc__ += ', '.join([x for x in sorted(Node.OPS.__dict__) if not x.sta
 Node.COMP.__doc__ += ', '.join([x for x in sorted(Node.COMP.__dict__) if not x.startswith('_')])
 
 ## -- (start marker for doc generator)
+
+## General
 
 class Module(Node):
     """ Each code that an AST is created for gets wrapped in a Module node.

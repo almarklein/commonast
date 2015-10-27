@@ -1,5 +1,19 @@
 # Node specifications
 
+
+Each node has a number of attributes as specified below. Each node also
+has a `tojson()` method, and a tree can be reconstructed using
+`Node.fromjson()`. Using `print(node)` will print its json.
+
+
+## Enums
+
+`Node.OPS` -  Operator enums: Add, And, BitAnd, BitOr, BitXor, Div, FloorDiv, Invert, LShift, Mod, Mult, Not, Or, Pow, RShift, Sub, UAdd, USub
+
+`Node.COMP` -  Comparison enums: Eq, Gt, GtE, In, Is, IsNot, Lt, LtE, NotEq
+
+## General
+
 **Module**
 
 Each code that an AST is created for gets wrapped in a Module node.
