@@ -6,19 +6,24 @@
 
 
 Each node has a number of attributes as specified below. Each node also
-has a `tojson()` method, and a tree can be reconstructed using
-`Node.fromjson()`. Using `print(node)` will print its json.
+has a `lineno` and `col_offset` property. Further it has a `tojson()`
+method, and a tree can be reconstructed using `Node.fromjson()`. Running
+`print(node)` will print a node's json.
 
 
 ## Enums
 
 `Node.OPS` -  Operator enums: Add, And, BitAnd, BitOr, BitXor, Div, FloorDiv, Invert, LShift, Mod, Mult, Not, Or, Pow, RShift, Sub, UAdd, USub
 
-`Node.COMP` -  Comparison enums: Eq, Gt, GtE, In, Is, IsNot, Lt, LtE, NotEq
+`Node.COMP` -  Comparison enums: Eq, Gt, GtE, In, Is, IsNot, Lt, LtE, NotEq, NotIn
 
 ## General
 
-**Module**
+class **Comment**
+
+* ``value``:  the comment string.
+
+class **Module**
 
 Each code that an AST is created for gets wrapped in a Module node.
 
@@ -26,50 +31,50 @@ Each code that an AST is created for gets wrapped in a Module node.
 
 ## Literals
 
-**Num**
+class **Num**
 
 * ``value``:  the number as a native Python object (int, float, or complex).
 
-**Str**
+class **Str**
 
 * ``value``:  the native Python str object.
 
-**Bytes**
+class **Bytes**
 
 * ``value``:  the native Python bytes object.
 
-**List**
+class **List**
 
 * ``element_nodes``:  the items in the list.
 
-**Tuple**
+class **Tuple**
 
 * ``element_nodes``:  the items in the tuple.
 
-**Set**
+class **Set**
 
 * ``element_nodes``:  the items in the set.
 
-**Dict**
+class **Dict**
 
 * ``key_nodes``:  the keys of the dict.
 * ``value_nodes``:  the corresponding values.
 
-**Ellipsis**
+class **Ellipsis**
 
 Represents the ``...`` syntax for the Ellipsis singleton.
 
-**NameConstant**
+class **NameConstant**
 
 * ``value``:  the corresponding native Python object like True, False or None.
 
 ## Variables, attributes, indexing and slicing
 
-**Name**
+class **Name**
 
 * ``name``:  the string name of this variable.
 
-**Starred**
+class **Starred**
 
 A starred variable name, e.g. ``*foo``. Note that this isn’t
 used to define a function with ``*args`` - FunctionDef nodes have
@@ -77,37 +82,37 @@ special fields for that.
 
 * ``value_node``:  the value that is starred, typically a Name node.
 
-**Attribute**
+class **Attribute**
 
 Attribute access, e.g. ``foo.bar``.
 
 * ``value_node``:  The node to get/set an attribute of. Typically a Name node.
 * ``attr``:  a string with the name of the attribute.
 
-**Subscript**
+class **Subscript**
 
 Subscript access, e.g. ``foo[3]``.
 
 * ``value_node``:  The node to get/set a subscript of. Typically a Name node.
 * ``slice_node``:  An Index, Slice or ExtSlice node.
 
-**Index**
+class **Index**
 
 * ``value_node``:  Single index.
 
-**Slice**
+class **Slice**
 
 * ``lower_node``:  start slice.
 * ``upper_node``:  end slice.
 * ``step_node``:  slice step.
 
-**ExtSlice**
+class **ExtSlice**
 
 * ``dim_nodes``:  list of Index and Slice nodes (of for each dimension).
 
 ## Expressions
 
-**Expr**
+class **Expr**
 
 When an expression, such as a function call, appears as a
 statement by itself (an expression statement), with its return value
@@ -116,14 +121,14 @@ not used or stored, it is wrapped in this container.
 * ``value_node``:  holds one of the other nodes in this section, or a
   literal, a Name, a Lambda, or a Yield or YieldFrom node.
 
-**UnaryOp**
+class **UnaryOp**
 
 A unary operation (e.g. ``-x``, ``not x``).
 
 * ``op``:  the operator (an enum from ``Node.OPS``).
 * ``value_nodes``:  a list with one node (i.e. the operand).
 
-**BinOp**
+class **BinOp**
 
 A binary operation (e.g. ``a / b``, ``a + b``).
 
@@ -131,7 +136,7 @@ A binary operation (e.g. ``a / b``, ``a + b``).
 * ``value_nodes``:  a list with two nodes (the one to the left and the
   one to the right of the operator).
 
-**BoolOp**
+class **BoolOp**
 
 A boolean operator (``and``, ``or``, but not ``not``).
 
@@ -139,7 +144,7 @@ A boolean operator (``and``, ``or``, but not ``not``).
 * ``value_nodes``:  a list of nodes. ``a``, ``b`` and ``c`` in
   ``a or b or c``.
 
-**Compare**
+class **Compare**
 
 A comparison of two or more values. 
 
@@ -147,7 +152,7 @@ A comparison of two or more values.
 * ``value_nodes``:  a list with two nodes (the one to the left and the
   one to the right of the operator).
 
-**Call**
+class **Call**
 
 A function call.
 
@@ -158,14 +163,14 @@ A function call.
 Note that an argument ``*x`` would be specified as a Starred node
 in arg_nodes, and ``**y`` as a Keyword node with a name being ``None``.
 
-**Keyword**
+class **Keyword**
 
 Keyword argument used in a Call.
 
 * ``name``:  the (string) name of the argument.
 * ``value_node``:  the value of the arg.
 
-**IfExp**
+class **IfExp**
 
 An expression such as ``a if b else c``.
 
@@ -173,22 +178,22 @@ An expression such as ``a if b else c``.
 * ``body_node``:  the ``a`` in the above.
 * ``else_node``:  the ``c`` in the above.
 
-**ListComp**
+class **ListComp**
 
 List comprehension.
 
 * ``element_node``:  the part being evaluated for each item.
 * ``comp_nodes``:  a list of Comprehension nodes.
 
-**SetComp**
+class **SetComp**
 
 Set comprehension. See ListComp.
 
-**GeneratorExp**
+class **GeneratorExp**
 
 Generor expression. See ListComp.
 
-**DictExp**
+class **DictExp**
 
 Dict comprehension.
 
@@ -196,7 +201,7 @@ Dict comprehension.
 * ``value_node``:  the value of the item being evaluated.
 * ``comp_nodes``:  a list of Comprehension nodes.
 
-**Comprehension**
+class **Comprehension**
 
 Represents a single for-clause in a comprehension.
 
@@ -207,14 +212,14 @@ Represents a single for-clause in a comprehension.
 
 ## Statements
 
-**Assign**
+class **Assign**
 
 Assignment of a value to a variable.
 
 * ``target_nodes``:  variables to assign to, Name or SubScript.
 * ``value_node``:  the object to assign.
 
-**AugAssign**
+class **AugAssign**
 
 Augmented assignment, such as ``a += 1``.
 
@@ -222,7 +227,7 @@ Augmented assignment, such as ``a += 1``.
 * ``op``:  operator enum (e.g. ``Node.OPS.Add``)
 * ``value_node``:  the object to assign.
 
-**Raise**
+class **Raise**
 
 Raising an exception.
 
@@ -230,25 +235,25 @@ Raising an exception.
   or Name, or None for a standalone raise.
 * ``cause_node``:  the optional part for y in raise x from y.
 
-**Assert**
+class **Assert**
 
 An assertion.
 
 * ``test_node``:  the condition to test.
 * ``msg_node``:  the failure message (commonly a Str node)
 
-**Delete**
+class **Delete**
 
 A del statement.
 
 * ``target_nodes``:  the variables to delete, such as Name, Attribute
   or Subscript nodes.
 
-**Pass**
+class **Pass**
 
 Do nothing.
 
-**Import**
+class **Import**
 
 An import statement.
 
@@ -260,7 +265,7 @@ An import statement.
 
 ## Control flow
 
-**If**
+class **If**
 
 An if-statement.
 
@@ -272,7 +277,7 @@ of the previous one.
 * ``body_nodes``:  the body of the if-statement.
 * ``else_nodes``:  the body of the else-clause of the if-statement.
 
-**For**
+class **For**
 
 A for-loop.
 
@@ -281,7 +286,7 @@ A for-loop.
 * ``body_nodes``:  the body of the for-loop.
 * ``else_nodes``:  the body of the else-clause of the for-loop.
 
-**While**
+class **While**
 
 A while-loop.
 
@@ -289,15 +294,15 @@ A while-loop.
 * ``body_nodes``:  the body of the for-loop.
 * ``else_nodes``:  the body of the else-clause of the for-loop.
 
-**Break**
+class **Break**
 
 Break from a loop.
 
-**Continue**
+class **Continue**
 
 Continue with next iteration of a loop.
 
-**Try**
+class **Try**
 
 Try-block.
 
@@ -306,7 +311,7 @@ Try-block.
 * ``else_nodes``:  the body of the else-clause of the try-block.
 * ``finally_nodes``:  the body of the finally-clause of the try-block.
 
-**ExceptHandler**
+class **ExceptHandler**
 
 Single except-clause.
 
@@ -315,14 +320,14 @@ Single except-clause.
 * ``name``:  the string name of the exception object in case of ``as err``.
 * ``body_nodes``:  the body of the except-clause.
 
-**With**
+class **With**
 
 A with-block (i.e. a context manager).
 
 * ``item_nodes``:  a list of WithItem nodes (i.e. context managers).
 * ``body_nodes``:  the body of the with-block.
 
-**WithItem**
+class **WithItem**
 
 A single context manager in a with block.
 
@@ -331,7 +336,7 @@ A single context manager in a with block.
 
 ## Function and class definitions
 
-**FunctionDef**
+class **FunctionDef**
 
 A function definition.
 
@@ -346,7 +351,7 @@ A function definition.
 * ``kwargs_node``:  an Arg node representing ``**kwargs``.
 * ``body_nodes``:  the body of the function.
 
-**Lambda**
+class **Lambda**
 
 Anonymous function definition.
 
@@ -356,7 +361,7 @@ Anonymous function definition.
 * ``kwargs_node``:  an Arg node representing ``**kwargs``.
 * ``body_nodes``:  the body of the function.
 
-**Arg**
+class **Arg**
 
 Function argument for a FunctionDef.
 
@@ -364,27 +369,27 @@ Function argument for a FunctionDef.
 * ``value_node``:  the default value of this argument. Can be None.
 * ``annotation_node``:  the annotation for this argument (Python3 only).
 
-**Return**
+class **Return**
 
 A return statement.
 
-**Yield**
+class **Yield**
 
 Yield expression.
 
-**YieldFrom**
+class **YieldFrom**
 
 YieldFrom expression.
 
-**Global**
+class **Global**
 
 * ``names``:  a list of variable names to declare global.
 
-**Nonlocal**
+class **Nonlocal**
 
 * ``names``:  a list of variable names to declare nonlocal.
 
-**ClassDef**
+class **ClassDef**
 
 A class definition.
 

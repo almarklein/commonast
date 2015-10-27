@@ -10,8 +10,9 @@ docs += """
 # Node specifications\n\n
 
 Each node has a number of attributes as specified below. Each node also
-has a `tojson()` method, and a tree can be reconstructed using
-`Node.fromjson()`. Using `print(node)` will print its json.
+has a `lineno` and `col_offset` property. Further it has a `tojson()`
+method, and a tree can be reconstructed using `Node.fromjson()`. Running
+`print(node)` will print a node's json.
 \n
 """
 
@@ -35,7 +36,7 @@ for line in code.splitlines():
             docs += '## %s\n\n' % title
         elif line.startswith('class '):
             clsname = line[6:].split('(')[0]
-            docs += '**%s**\n\n'% clsname
+            docs += 'class **%s**\n\n'% clsname
             cls = getattr(commonast, clsname)
             doc = '    ' + cls.__doc__.strip()
             lines = []

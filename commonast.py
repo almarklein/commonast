@@ -15,19 +15,22 @@ import base64
 pyversion = sys.version_info
 
 
-def parse(code):
-    """ Parse the given string of Python code and return a common AST tree.
+def parse(code, comments=False):
+    """ Parse Python code to produce a common AST tree.
+    
+    Parameters:
+        code (str): the Python code to parse
+        comments (bool): if True, will include Comment nodes. Default False.
     """
-    root = ast.parse(code)
-    converter = NativeAstConverter()
-    return converter.convert(root)
+    converter = NativeAstConverter(code)
+    return converter.convert()
 
 
 class Node:
     """ Abstract base class for all Nodes.
     """
     
-    __slots__ = []
+    __slots__ = ['lineno', 'col_offset']
     
     class OPS:
         """ Operator enums: """
@@ -63,7 +66,8 @@ class Node:
         GtE = 'GtE'
         Is = 'Is'
         IsNot = 'IsNot'
-        In = 'NotIn'
+        In = 'In'
+        NotIn = 'NotIn'
     
     def __init__(self, *args):
         assert not hasattr(self, '__dict__'), 'Nodes must have __slots__'
@@ -163,6 +167,13 @@ Node.COMP.__doc__ += ', '.join([x for x in sorted(Node.COMP.__dict__) if not x.s
 
 ## General
 
+class Comment(Node):
+    """
+    Attributes:
+        value: the comment string.
+    """
+    __slots__ = 'value',
+
 class Module(Node):
     """ Each code that an AST is created for gets wrapped in a Module node.
     
@@ -170,7 +181,7 @@ class Module(Node):
         body_nodes: a list of nodes.
     """
     __slots__ = 'body_nodes',
-    
+
 ## Literals
 
 class Num(Node):
@@ -670,18 +681,40 @@ class NativeAstConverter:
     """ Convert ast produced bt Python's ast module to common ast.
     """
     
-    def __init__(self):
+    def __init__(self, code):
+        self._root = ast.parse(code)
+        self._lines =code.splitlines()
         self._stack = []
     
-    def convert(self, root):
+    def _add_comments(self, parent, lineno):
+        """ Add comment nodes from the last child of parent until the
+        given line number.
+        """
+        linenr1 = parent.lineno
+        if parent.body_nodes:
+            linenr1 = parent.body_nodes[-1].lineno
+        linenr2 = lineno
+        
+        for i in range(linenr1, linenr2):
+            line = self._lines[i-1]  # lineno's start from 1
+            if line.lstrip().startswith('#'):
+                before, _, comment = line.partition('#')
+                node = Comment(comment)
+                node.lineno = i
+                node.col_offset = len(before)
+                parent.body_nodes.append(node)
+    
+    def convert(self, comments=False):
         assert not self._stack
         
-        result = self._convert(root)
+        result = self._convert(self._root)
         
         while self._stack:
             native_node, parent = self._stack.pop(0)
             node = self._convert(native_node)
             if parent is not None:
+                if comments:
+                    self._add_comments(parent, node.lineno)
                 node._append_to_parent_body(parent)
         
         return result
@@ -698,6 +731,9 @@ class NativeAstConverter:
         if converter:
             val = converter(n)
             assert isinstance(val, Node)
+            # Set its position
+            val.lineno = getattr(n, 'lineno', 1)
+            val.col_offset = getattr(n, 'col_offset', 0)
             return val
         else:
             raise RuntimeError('%s cannot convert %s nodes.' % (self.__class__.__name__, type))
@@ -983,8 +1019,10 @@ class NativeAstConverter:
 
 
 TEST = """
+# heya
 aap = bar = 2 
 aap += 2
+# bla
 def foo(a, b, *c):
     return None
 
