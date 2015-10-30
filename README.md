@@ -11,6 +11,17 @@ It defines a function `parse()` to act as a replacement for
 For a definition of the nodes see 
 [the nodes docs](https://github.com/almarklein/commonast/blob/master/nodes.md).
 
+## Requirements / support
+
+Commonast has been tested to work on:
+
+* CPython 3.3
+* CPython 3.4
+* CPython 3.5
+* pypy3
+
+Legacy Python (Python 2.7) is not (yet) supported.
+
 ## Installation
 
 Copy the [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/commonast.py)
