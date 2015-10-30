@@ -39,6 +39,7 @@ support making this more generally useful.
 
 ## Related projects
 
+* https://greentreesnakes.readthedocs.org provide the missing docs on Python's ast module. I found this a crucial resource when implementing commonast 
 * https://github.com/Psycojoker/baron
 * https://github.com/davidhalter/jedi
 * Python's buildin ast module (a C implemantation)
