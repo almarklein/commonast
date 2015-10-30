@@ -4,7 +4,7 @@ A common AST description for Python
 
 The aim of this project is to define a common ast description, that is
 the same for different Python versions and implementations. All code
-is in [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/functions.py).
+is in [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/commonast.py).
 It defines a function `parse()` to act as a replacement for
 `ast.parse()`.
 
@@ -13,7 +13,7 @@ For a definition of the nodes see
 
 ## Installation
 
-Copy the [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/functions.py)
+Copy the [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/commonast.py)
 module to your own project or put it somewhere on your PYTHONPATH.
 
 This module does not live on pypi and cannot be installed with pip. The
