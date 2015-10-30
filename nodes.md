@@ -13,9 +13,9 @@ method, and a tree can be reconstructed using `Node.fromjson()`. Running
 
 ## Enums
 
-`Node.OPS` -  Operator enums: Add, And, BitAnd, BitOr, BitXor, Div, FloorDiv, Invert, LShift, Mod, Mult, Not, Or, Pow, RShift, Sub, UAdd, USub
+`Node.OPS` -  Operator enums: 
 
-`Node.COMP` -  Comparison enums: Eq, Gt, GtE, In, Is, IsNot, Lt, LtE, NotEq, NotIn
+`Node.COMP` -  Comparison enums: 
 
 ## General
 
@@ -76,7 +76,7 @@ Represents the ``...`` syntax for the Ellipsis singleton.
 
 #### class Starred
 
-A starred variable name, e.g. ``*foo``. Note that this isn’t
+A starred variable name, e.g. ``*foo``. Note that this isn't
 used to define a function with ``*args`` - FunctionDef nodes have
 special fields for that.
 
@@ -156,7 +156,8 @@ A comparison of two or more values.
 
 A function call.
 
-* ``func_node``:  Name or Attribute node that represents the function.
+* ``func_node``:  Name, Attribute or SubScript node that represents
+  the function.
 * ``arg_nodes``:  list of nodes representing positional arguments.
 * ``kwarg_nodes``:  list of Keyword nodes representing keyword arguments.
 
@@ -167,7 +168,7 @@ in arg_nodes, and ``**y`` as a Keyword node with a name being ``None``.
 
 Keyword argument used in a Call.
 
-* ``name``:  the (string) name of the argument.
+* ``name``:  the (string) name of the argument. Is None for ``**kwargs``.
 * ``value_node``:  the value of the arg.
 
 #### class IfExp
@@ -193,7 +194,7 @@ Set comprehension. See ListComp.
 
 Generor expression. See ListComp.
 
-#### class DictExp
+#### class DictComp
 
 Dict comprehension.
 
@@ -269,7 +270,7 @@ An import statement.
 
 An if-statement.
 
-Note that elif clauses don’t have a special representation in the
+Note that elif clauses don't have a special representation in the
 AST, but rather appear as extra If nodes within the else section
 of the previous one.
 
@@ -318,6 +319,7 @@ Single except-clause.
 * ``type_node``:  the type of exception to catch. Often a Name node
   or None to catch all.
 * ``name``:  the string name of the exception object in case of ``as err``.
+  None otherwise.
 * ``body_nodes``:  the body of the except-clause.
 
 #### class With
@@ -346,7 +348,8 @@ A function definition.
   last).
 * ``annotation_node``:  the return annotation (Python 3 only).
 * ``arg_nodes``:  list of Args nodes representing positional arguments.
-* ``kwarg_nodes``:  list of Arg nodes representing keyword arguments.
+  These *may* have a default value.
+* ``kwarg_nodes``:  list of Arg nodes representing keyword-only arguments.
 * ``args_node``:  an Arg node representing ``*args``.
 * ``kwargs_node``:  an Arg node representing ``**kwargs``.
 * ``body_nodes``:  the body of the function.
@@ -356,10 +359,10 @@ A function definition.
 Anonymous function definition.
 
 * ``arg_nodes``:  list of Args nodes representing positional arguments.
-* ``kwarg_nodes``:  list of Arg nodes representing keyword arguments.
+* ``kwarg_nodes``:  list of Arg nodes representing keyword-only arguments.
 * ``args_node``:  an Arg node representing ``*args``.
 * ``kwargs_node``:  an Arg node representing ``**kwargs``.
-* ``body_nodes``:  the body of the function.
+* ``body_node``:  the body of the function (a single node).
 
 #### class Arg
 
@@ -371,23 +374,23 @@ Function argument for a FunctionDef.
 
 #### class Return
 
-A return statement.
+* ``value_node``:  the value to return.
 
 #### class Yield
 
-Yield expression.
+* ``value_node``:  the value to yield.
 
 #### class YieldFrom
 
-YieldFrom expression.
+* ``value_node``:  the value to yield.
 
 #### class Global
 
-* ``names``:  a list of variable names to declare global.
+* ``names``:  a list of string names to declare global.
 
 #### class Nonlocal
 
-* ``names``:  a list of variable names to declare nonlocal.
+* ``names``:  a list of string names to declare nonlocal.
 
 #### class ClassDef
 
@@ -396,9 +399,12 @@ A class definition.
 * ``name``:  a string for the class name.
 * ``decorator_nodes``:  the list of decorators to be applied, as in FunctionDef.
 * ``arg_nodes``:  list of nodes representing base classes.
-* ``kwarg_nodes``:  list of Keyword nodes representing keyword arguments.
+* ``kwarg_nodes``:  list of Keyword nodes representing keyword-only arguments.
 * ``body_nodes``:  the body of the class.
 
-Note that an argument ``*x`` would be specified as a Starred node
-in arg_nodes, and ``**y`` as a Keyword node with a name being ``None``.
+Note that arg_nodes and kwarg_nodes are similar to those in the
+Call node. An argument ``*x`` would be specified as a Starred node
+in arg_nodes, and ``**y`` as a Keyword node with a name being
+``None``. For more information on keyword arguments see
+https://www.python.org/dev/peps/pep-3115/.
 

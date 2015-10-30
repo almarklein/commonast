@@ -4,16 +4,17 @@ A common AST description for Python
 
 The aim of this project is to define a common ast description, that is
 the same for different Python versions and implementations. All code
-is in `commonast.py`. It defines a function `parse()` to act as a
-replacement for `ast.parse()`.
+is in [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/functions.py).
+It defines a function `parse()` to act as a replacement for
+`ast.parse()`.
 
 For a definition of the nodes see 
 [the nodes docs](https://github.com/almarklein/commonast/blob/master/nodes.md).
 
 ## Installation
 
-Copy the `commonast.py` module to your own project or put it somewhere
-on your PYTHONPATH. 
+Copy the [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/functions.py)
+module to your own project or put it somewhere on your PYTHONPATH.
 
 This module does not live on pypi and cannot be installed with pip. The
 reason for this is that the ast definition may need to be changed if
@@ -29,6 +30,9 @@ implementation. Also, if me or someone else creates a pure Python AST
 parser that produces commonast, then we can easily use it in PyScript
 to allow it to compile itself (which would open up some awesome
 possibilities).
+
+The module is maintained from the Flexx project for now. That may change
+if commonast becomes used in other projects.
 
 Maybe this project can be useful to others as well. I'd be happy to
 support making this more generally useful.
