@@ -15,12 +15,12 @@ For a definition of the nodes see
 
 Commonast has been tested to work on:
 
+* CPython 2.7
 * CPython 3.3
 * CPython 3.4
 * CPython 3.5
-* pypy3
+* pypy, pypy3, pypy4
 
-Legacy Python (Python 2.7) is not (yet) supported.
 
 ## Installation
 
