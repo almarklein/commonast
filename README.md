@@ -56,3 +56,4 @@ support making this more generally useful.
 * Python's buildin ast module (a C implemantation)
 * Pythons buildin `lib2to3` module (probably the easiest route for a
   pure Python ast parser.
+* Some people are [discussing a unified ast parser](https://github.com/davidhalter/jedi/issues/630)
