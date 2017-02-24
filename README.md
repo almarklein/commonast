@@ -19,6 +19,7 @@ Commonast has been tested to work on:
 * CPython 3.3
 * CPython 3.4
 * CPython 3.5
+* CPython 3.6
 * pypy, pypy3, pypy4
 
 
