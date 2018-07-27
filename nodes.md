@@ -13,9 +13,9 @@ method, and a tree can be reconstructed using `Node.fromjson()`. Running
 
 ## Enums
 
-`Node.OPS` -  Operator enums: 
+`Node.OPS` -  Operator enums: Add, And, BitAnd, BitOr, BitXor, Div, FloorDiv, Invert, LShift, Mod, Mult, Not, Or, Pow, RShift, Sub, UAdd, USub
 
-`Node.COMP` -  Comparison enums: 
+`Node.COMP` -  Comparison enums: Eq, Gt, GtE, In, Is, IsNot, Lt, LtE, NotEq, NotIn
 
 ## General
 
@@ -38,6 +38,26 @@ Each code that an AST is created for gets wrapped in a Module node.
 #### class Str
 
 * ``value``:  the native Python str object.
+
+#### class FormattedValue
+
+Node representing a single formatting field in an f-string. If the
+string contains a single formatting field and nothing else the node can be
+isolated, otherwise it appears in JoinedStr.
+
+* ``value_node``:  an expression (can be anything).
+* ``conversion``:  a string, '' means no formatting, 's' means !s string
+  formatting, 'r' means !r repr formatting, 'a' means !a ascii
+  formatting.
+* ``format_node``:   a JoinedStr node reprensenting the formatting, or None
+  if no format was specified. Both conversion and format_node can be
+  set at the same time.
+
+#### class JoinedStr
+
+An f-string, comprising a series of FormattedValue and Str nodes.
+
+* ``value_nodes``:  list of Str and FormattedValue nodes.
 
 #### class Bytes
 

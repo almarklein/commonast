@@ -4,7 +4,7 @@ A common AST description for Python
 
 The aim of this project is to define a common ast description, that is
 the same for different Python versions and implementations. All code
-is in [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/commonast.py).
+is in [commonast.py](https://github.com/flexxui/pscript/blob/master/pscript/commonast.py).
 It defines a function `parse()` to act as a replacement for
 `ast.parse()`.
 
@@ -20,12 +20,13 @@ Commonast has been tested to work on:
 * CPython 3.4
 * CPython 3.5
 * CPython 3.6
+* CPython 3.7
 * pypy, pypy3, pypy4
 
 
 ## Installation
 
-Copy the [commonast.py](https://github.com/zoofIO/flexx/blob/master/flexx/pyscript/commonast.py)
+Copy the [commonast.py](https://github.com/flexxui/pscript/blob/master/pscript/commonast.py)
 module to your own project or put it somewhere on your PYTHONPATH.
 
 This module does not live on pypi and cannot be installed with pip. The
@@ -36,10 +37,10 @@ guarantee backward compatibility.
 ## Purpose
 
 I'm using this in
-[flexx.pyscript](http://flexx.readthedocs.org/en/latest/pyscript/index.html)
+[pscript](http://pscript.readthedocs.org)
 so that the code there can be agnostic about Python version and
 implementation. Also, if me or someone else creates a pure Python AST
-parser that produces commonast, then we can easily use it in PyScript
+parser that produces commonast, then we can easily use it in PScript
 to allow it to compile itself (which would open up some awesome
 possibilities).
 

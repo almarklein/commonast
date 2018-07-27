@@ -3,7 +3,7 @@ Small script to create the node specification in markdown.
 """
 
 # import commonast
-from flexx.pyscript import commonast
+from pscript import commonast
 
 docs = '*(this document is auto-generated, do not edit)*\n\n'
 
